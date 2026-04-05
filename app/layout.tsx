@@ -26,14 +26,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className="bg-gray-50 text-gray-900">
+      <body className="bg-white text-[#1A1A1A]">
         {/* ナビゲーションバー（スマホ：下部、PC：左側） */}
         <Navigation />
 
         {/* メインコンテンツエリア */}
         {/* スマホ：下部タブバー分の余白(pb-20)を追加 */}
-        {/* PC：左サイドバー分の余白(md:pl-64)を追加 */}
-        <main className="min-h-screen pb-20 md:pb-0 md:pl-64">
+        {/* PC：左サイドバー分の余白(md:pl-60)を追加（サイドバー幅に合わせています） */}
+        <main className="min-h-screen pb-24 md:pb-0 md:pl-60">
           {children}
         </main>
       </body>

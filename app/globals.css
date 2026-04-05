@@ -32,9 +32,17 @@
   .touch-target {
     @apply min-h-[48px] min-w-[48px];
   }
+}
 
-  /* カードのシャドウスタイル */
-  .card-shadow {
-    @apply shadow-sm hover:shadow-md transition-shadow duration-200;
-  }
+/* スキャン画面のスキャンラインアニメーション */
+@keyframes scanline {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(280px); opacity: 0; }
+}
+
+/* iPhoneのホームバー対応（セーフエリア） */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
