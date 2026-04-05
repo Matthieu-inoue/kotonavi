@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(gh auth:*)",
+      "Bash(git --version)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(curl -s https://api.github.com --max-time 5)",
+      "Bash(curl -sL \"https://github.com/cli/cli/releases/download/v2.67.0/gh_2.67.0_macOS_arm64.tar.gz\" -o /tmp/gh.tar.gz)",
+      "Bash(tar -xzf /tmp/gh.tar.gz -C /tmp)",
+      "Read(//tmp/gh_2.67.0_macOS_arm64/**)",
+      "Bash(curl -sL \"https://github.com/cli/cli/releases/download/v2.67.0/gh_2.67.0_macOS_arm64.zip\" -o /tmp/gh.zip)",
+      "Bash(unzip -q /tmp/gh.zip -d /tmp/gh_extracted)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/gh_extracted/gh_2.67.0_macOS_arm64/bin/**)",
+      "Bash(cp /tmp/gh_extracted/gh_2.67.0_macOS_arm64/bin/gh /usr/local/bin/gh)",
+      "Bash(sudo cp:*)",
+      "Bash(mkdir -p ~/bin)",
+      "Bash(cp /tmp/gh_extracted/gh_2.67.0_macOS_arm64/bin/gh ~/bin/gh)",
+      "Bash(chmod +x ~/bin/gh)",
+      "Bash(~/bin/gh --version)",
+      "Bash(~/bin/gh auth:*)"
+    ]
+  }
+}

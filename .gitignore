@@ -1,0 +1,20 @@
+# Next.js ビルドファイル（自動生成されるファイル）
+.next/
+out/
+
+# 依存パッケージ（npm install で再作成できます）
+node_modules/
+
+# 環境変数ファイル（パスワードなどの秘密情報が入るため必ず除外）
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# macOS のシステムファイル
+.DS_Store
+
+# エディタの設定ファイル
+.vscode/
+*.swp

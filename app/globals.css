@@ -1,0 +1,40 @@
+/* ============================================================
+   グローバルCSS
+   アプリ全体に適用されるスタイルです。
+   Tailwind CSSの基本設定を読み込んでいます。
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ベーススタイル */
+@layer base {
+  /* 全体のフォント設定 */
+  body {
+    /* 日本語に適したフォントスタック */
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+      sans-serif;
+    /* 文字をくっきり表示させる設定 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* スムーズスクロール */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* カスタムコンポーネント */
+@layer components {
+  /* タッチターゲットのサイズを48px以上に保つユーティリティ */
+  .touch-target {
+    @apply min-h-[48px] min-w-[48px];
+  }
+
+  /* カードのシャドウスタイル */
+  .card-shadow {
+    @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+}
