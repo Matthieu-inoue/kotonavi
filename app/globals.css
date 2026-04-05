@@ -10,14 +10,14 @@
 
 /* ベーススタイル */
 @layer base {
-  /* 全体のフォント設定 */
   body {
-    /* 日本語に適したフォントスタック */
-    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
-      sans-serif;
     /* 文字をくっきり表示させる設定 */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* 文字間隔をわずかに広げて高級感を出す */
+    letter-spacing: 0.025em;
+    /* フォントウェイトを細めに（Noto Sans JP Light） */
+    font-weight: 300;
   }
 
   /* スムーズスクロール */
@@ -26,11 +26,26 @@
   }
 }
 
-/* カスタムコンポーネント */
-@layer components {
-  /* タッチターゲットのサイズを48px以上に保つユーティリティ */
+/* カスタムユーティリティ */
+@layer utilities {
+  /* タッチターゲットのサイズを48px以上に保つ */
   .touch-target {
     @apply min-h-[48px] min-w-[48px];
+  }
+
+  /* カード用の柔らかい影（枠線の代わりに使います） */
+  .card-shadow {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  /* ホバー時の影（少し強く） */
+  .card-shadow-hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  }
+
+  /* セージグリーンのボタン影 */
+  .sage-shadow {
+    box-shadow: 0 4px 20px rgba(142, 196, 184, 0.45);
   }
 }
 

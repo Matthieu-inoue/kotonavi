@@ -2,46 +2,13 @@
 
 // ============================================================
 // スキャン画面（Scan）
-// カメラで物を認識するメインアクション機能の土台です。
-// 中央に大きなボタンを配置し、直感的に使えるUIにします。
+// カメラで物を認識するメインアクション機能の画面です。
+// 表示テキストは lib/contents.ts の SCAN で管理しています。
 // ============================================================
 
 import { useEffect, useState } from "react";
 import { logAction, logPageView } from "@/lib/actionLogger";
-
-// ============================================================
-// 使い方ガイド
-// ここを書き換えると使い方の説明が変わります
-// ============================================================
-const HOW_TO_USE = [
-  {
-    step: 1,
-    // 手順のタイトル ← ここを書き換えると変わります
-    title: "カメラを向ける",
-    // 手順の説明 ← ここを書き換えると変わります
-    description: "読みたいものにカメラを向けます",
-  },
-  {
-    step: 2,
-    title: "ボタンを押す",
-    description: "青いボタンを押してスキャン",
-  },
-  {
-    step: 3,
-    title: "ことばが出る",
-    description: "名前や読み方が表示されます",
-  },
-];
-
-// ============================================================
-// 最近スキャンしたアイテム（サンプルデータ）
-// 将来は自動保存されたデータが表示されます
-// ============================================================
-const RECENT_SCANS = [
-  { id: 1, label: "りんご", reading: "Apple", time: "10分前", emoji: "🍎" },
-  { id: 2, label: "電車", reading: "Train", time: "1時間前", emoji: "🚃" },
-  { id: 3, label: "病院", reading: "Hospital", time: "昨日", emoji: "🏥" },
-];
+import { SCAN } from "@/lib/contents";
 
 export default function ScanPage() {
   useEffect(() => {
@@ -63,21 +30,21 @@ export default function ScanPage() {
 
   return (
     <div className="max-w-xl mx-auto min-h-screen flex flex-col">
-      {/* ページヘッダー */}
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-gray-100 px-5 py-4">
+
+      {/* ── ページヘッダー ── */}
+      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-md px-5 py-4"
+        style={{ boxShadow: "0 1px 0 rgba(0,0,0,0.05)" }}>
         <div className="flex items-center justify-between">
           <div>
-            {/* ページタイトル ← ここを書き換えると画面タイトルが変わります */}
-            <h1 className="text-lg font-bold text-[#1A1A1A] tracking-tight">スキャン</h1>
-            {/* サブタイトル ← ここを書き換えると変わります */}
-            <p className="text-xs text-gray-400 mt-0.5">カメラでことばを見つけよう</p>
+            <h1 className="text-lg font-bold text-[#1A1A1A] tracking-tight">{SCAN.title}</h1>
+            <p className="text-xs text-[#737373] mt-0.5">{SCAN.subtitle}</p>
           </div>
           <button
             onClick={() => logAction("button_click", "scan", "使い方ボタンをタップ")}
             className="touch-target w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-50"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-              stroke="#9CA3AF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              stroke="#B0B8C1" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" />
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
               <line x1="12" y1="17" x2="12.01" y2="17" strokeWidth="2.5" />
@@ -86,18 +53,19 @@ export default function ScanPage() {
         </div>
       </div>
 
-      {/* メインスキャンエリア */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 gap-6">
-        {/* ビューファインダー枠
-            装飾を極力省いた、清潔感のある四角い枠 */}
+      {/* ── メインスキャンエリア ── */}
+      <div className="flex-1 flex flex-col items-center justify-center px-8 py-10 gap-7">
+
+        {/* ビューファインダー枠 */}
         <div className="relative w-full max-w-xs aspect-square">
-          {/* メイン枠 */}
-          <div className="absolute inset-0 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden">
-            {/* スキャン中：アニメーションライン */}
+          {/* メイン枠（影のみ、枠線なし） */}
+          <div className="absolute inset-0 rounded-3xl bg-[#F8FAFA] flex items-center justify-center overflow-hidden card-shadow">
+
+            {/* スキャン中アニメーション */}
             {isScanning && (
               <div className="absolute inset-0">
                 <div
-                  className="absolute left-0 right-0 h-px bg-[#007AFF] opacity-60"
+                  className="absolute left-0 right-0 h-px bg-[#8EC4B8] opacity-70"
                   style={{ animation: "scanline 1.5s ease-in-out infinite" }}
                 />
               </div>
@@ -107,56 +75,55 @@ export default function ScanPage() {
             <div className="text-center p-8">
               {!isScanning && !showResult && (
                 <>
-                  {/* カメラアイコン（SVG） */}
                   <svg width="56" height="56" viewBox="0 0 24 24" fill="none"
                     stroke="#D1D5DB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                     className="mx-auto mb-4">
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5l2-3h7l2 3H21a2 2 0 0 1 2 2z" />
                     <circle cx="12" cy="13" r="4" />
                   </svg>
-                  {/* ← ここを書き換えると案内文が変わります */}
-                  <p className="text-gray-400 text-sm">カメラがここに表示されます</p>
-                  <p className="text-gray-300 text-xs mt-1">下のボタンを押して試してみよう</p>
+                  <p className="text-[#B0B8C1] text-sm tracking-wide">{SCAN.placeholder}</p>
+                  <p className="text-[#D1D5DB] text-xs mt-1 tracking-wide">{SCAN.placeholderSub}</p>
                 </>
               )}
 
               {isScanning && (
                 <>
                   <svg width="56" height="56" viewBox="0 0 24 24" fill="none"
-                    stroke="#007AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                    stroke="#8EC4B8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
                     className="mx-auto mb-4 animate-pulse">
                     <circle cx="11" cy="11" r="8" />
                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
-                  {/* ← ここを書き換えると処理中メッセージが変わります */}
-                  <p className="text-[#007AFF] text-sm font-medium animate-pulse">スキャン中...</p>
+                  <p className="text-[#8EC4B8] text-sm font-medium animate-pulse tracking-wide">
+                    {SCAN.scanning}
+                  </p>
                 </>
               )}
 
               {showResult && (
                 <div>
                   <p className="text-6xl mb-3">🍎</p>
-                  {/* スキャン結果（将来はAIが返す内容になります） */}
-                  <p className="text-3xl font-bold text-[#1A1A1A] mb-1">りんご</p>
-                  <p className="text-gray-400 text-sm">Apple</p>
-                  <p className="text-xs text-[#007AFF] mt-2 font-medium">認識しました</p>
+                  <p className="text-3xl font-bold text-[#1A1A1A] mb-1.5 tracking-wide">りんご</p>
+                  <p className="text-[#B0B8C1] text-sm tracking-widest">Apple</p>
+                  <p className="text-xs text-[#8EC4B8] mt-2.5 font-medium tracking-wide">
+                    {SCAN.recognized}
+                  </p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* 四隅のコーナーマーカー（#007AFF、細め） */}
-          {["top-0 left-0 border-t-2 border-l-2 rounded-tl-2xl",
-            "top-0 right-0 border-t-2 border-r-2 rounded-tr-2xl",
-            "bottom-0 left-0 border-b-2 border-l-2 rounded-bl-2xl",
-            "bottom-0 right-0 border-b-2 border-r-2 rounded-br-2xl",
+          {/* 四隅のコーナーマーカー */}
+          {["top-0 left-0 border-t-2 border-l-2 rounded-tl-3xl",
+            "top-0 right-0 border-t-2 border-r-2 rounded-tr-3xl",
+            "bottom-0 left-0 border-b-2 border-l-2 rounded-bl-3xl",
+            "bottom-0 right-0 border-b-2 border-r-2 rounded-br-3xl",
           ].map((cls, i) => (
-            <div key={i} className={`absolute w-6 h-6 border-[#007AFF] ${cls}`} />
+            <div key={i} className={`absolute w-7 h-7 border-[#8EC4B8] opacity-60 ${cls}`} />
           ))}
         </div>
 
-        {/* メインスキャンボタン（大きく・押しやすく）
-            オレンジを廃止 → #007AFF（青）に統一 */}
+        {/* メインスキャンボタン */}
         <button
           onClick={showResult
             ? () => { setShowResult(false); logAction("scan_reset", "scan", "スキャンリセット"); }
@@ -166,17 +133,17 @@ export default function ScanPage() {
           className={`
             w-24 h-24 rounded-full
             flex flex-col items-center justify-center gap-1.5
-            text-white font-medium text-xs
-            shadow-lg
+            text-white font-medium text-xs tracking-wide
             transition-all duration-200
             ${isScanning
-              ? "bg-gray-200 cursor-not-allowed shadow-none"
+              ? "bg-gray-200 cursor-not-allowed"
               : showResult
-                ? "bg-[#34C759] hover:opacity-90 active:scale-95 shadow-green-200"
-                : "bg-[#007AFF] hover:opacity-90 active:scale-95 shadow-blue-200"
+                ? "bg-[#34C759] hover:opacity-90 active:scale-95"
+                : "bg-[#8EC4B8] hover:opacity-90 active:scale-95 sage-shadow"
             }
           `}
           aria-label={showResult ? "もう一度スキャン" : "スキャン開始"}
+          style={isScanning || showResult ? undefined : { boxShadow: "0 4px 20px rgba(142,196,184,0.45)" }}
         >
           {isScanning ? (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
@@ -197,17 +164,13 @@ export default function ScanPage() {
             </svg>
           )}
           <span>
-            {isScanning ? "読み取り中" : showResult ? "もう一度" : "スキャン"}
+            {isScanning ? SCAN.buttonScanning : showResult ? SCAN.buttonRetry : SCAN.buttonScan}
           </span>
         </button>
 
-        {/* 操作ヒント ← ここを書き換えるとヒントが変わります */}
-        <p className="text-xs text-gray-400 text-center">
-          {isScanning
-            ? "認識しています..."
-            : showResult
-              ? "ことばが見つかりました。投稿または練習に追加できます"
-              : "青いボタンを押してスキャンしてみよう"}
+        {/* 操作ヒント */}
+        <p className="text-xs text-[#B0B8C1] text-center tracking-wide">
+          {isScanning ? SCAN.hintScanning : showResult ? SCAN.hintResult : SCAN.hintDefault}
         </p>
 
         {/* スキャン結果後のアクション */}
@@ -215,63 +178,38 @@ export default function ScanPage() {
           <div className="flex gap-3 w-full max-w-xs">
             <button
               onClick={() => logAction("button_click", "scan", "ギャラリーに投稿をタップ")}
-              className="flex-1 bg-[#007AFF] text-white font-semibold py-3 rounded-xl min-h-[48px] text-sm hover:opacity-90 active:scale-95 transition-all"
+              className="flex-1 bg-[#8EC4B8] text-white font-semibold py-3.5 rounded-2xl min-h-[48px] text-sm hover:opacity-90 active:scale-95 transition-all tracking-wide sage-shadow"
             >
-              投稿する
+              {SCAN.postButton}
             </button>
             <button
               onClick={() => logAction("button_click", "scan", "練習に追加をタップ")}
-              className="flex-1 border border-gray-200 text-[#1A1A1A] font-semibold py-3 rounded-xl min-h-[48px] text-sm hover:bg-gray-50 active:scale-95 transition-all"
+              className="flex-1 bg-gray-50 text-[#737373] font-semibold py-3.5 rounded-2xl min-h-[48px] text-sm hover:bg-gray-100 active:scale-95 transition-all tracking-wide card-shadow"
             >
-              練習に追加
+              {SCAN.addButton}
             </button>
           </div>
         )}
       </div>
 
-      {/* 使い方ガイド */}
-      <div className="px-5 pb-5">
-        <h2 className="text-sm font-semibold text-gray-400 tracking-wide mb-3">
-          {/* ← ここを書き換えるとセクションタイトルが変わります */}
-          HOW TO USE
+      {/* ── 使い方ガイド ── */}
+      <div className="px-5 pb-6">
+        <h2 className="text-xs font-semibold text-[#B0B8C1] tracking-widest mb-4">
+          {SCAN.howToLabel}
         </h2>
-        <div className="grid grid-cols-3 gap-2">
-          {HOW_TO_USE.map((step) => (
-            <div key={step.step} className="border border-gray-100 rounded-xl p-3 text-center">
-              {/* ステップ番号 */}
-              <div className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs flex items-center justify-center mx-auto mb-2 font-bold">
+        <div className="grid grid-cols-3 gap-3">
+          {SCAN.howTo.map((step) => (
+            <div key={step.step} className="bg-white rounded-3xl p-4 text-center card-shadow">
+              <div className="w-6 h-6 rounded-full bg-[#8EC4B8] text-white text-xs flex items-center justify-center mx-auto mb-2.5 font-bold">
                 {step.step}
               </div>
-              <p className="text-xs font-semibold text-[#1A1A1A]">{step.title}</p>
-              <p className="text-[10px] text-gray-400 mt-0.5 leading-tight">{step.description}</p>
+              <p className="text-xs font-semibold text-[#1A1A1A] tracking-wide">{step.title}</p>
+              <p className="text-[10px] text-[#737373] mt-1 leading-tight tracking-wide">{step.description}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 最近のスキャン履歴 */}
-      <div className="px-5 pb-5">
-        <h2 className="text-sm font-semibold text-gray-400 tracking-wide mb-3">
-          {/* ← ここを書き換えるとセクションタイトルが変わります */}
-          RECENT SCANS
-        </h2>
-        <div className="space-y-2">
-          {RECENT_SCANS.map((scan) => (
-            <button
-              key={scan.id}
-              onClick={() => logAction("history_click", "scan", `履歴：${scan.label}をタップ`)}
-              className="w-full flex items-center gap-3 border border-gray-100 rounded-xl px-4 py-3 min-h-[56px] hover:bg-gray-50 active:scale-[0.99] transition-all text-left"
-            >
-              <span className="text-2xl">{scan.emoji}</span>
-              <div className="flex-1">
-                <p className="font-semibold text-[#1A1A1A] text-sm">{scan.label}</p>
-                <p className="text-xs text-gray-400">{scan.reading}</p>
-              </div>
-              <p className="text-xs text-gray-300 tabular-nums">{scan.time}</p>
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
