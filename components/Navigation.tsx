@@ -2,68 +2,44 @@
 
 // ============================================================
 // Navigation コンポーネント
-// スマホ：画面下部にボタンが並ぶ「タブバー」
-// iPad・PC：画面左側に縦に並ぶ「サイドバー」
-// 画面の幅によって自動で切り替わります。
+// スマホ：画面下部の「タブバー」（Instagram風）
+// iPad/PC：画面左側の「サイドバー」
+// 画面幅によって自動で切り替わります（768px が境界）。
 // ============================================================
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LayoutGrid, Zap, Camera, User } from "lucide-react";
 import { logAction } from "@/lib/actionLogger";
-import { APP, NAV } from "@/lib/contents";
+import { APP, NAV } from "@/constants/text";
 
 // ============================================================
 // ブランドカラー定数
-// ここを変えるとアクセントカラーが全ナビに反映されます
+// ACCENT を変えると全ナビのアクセント色が変わります
 // ============================================================
-const ACCENT = "#8EC4B8";       // セージグリーン
-const INACTIVE = "#B0B8C1";     // 非アクティブのアイコン色
+const ACCENT   = "#064E3B"; // Midnight Emerald（選択状態のアイコン/テキスト）
+const INACTIVE = "#94A3B8"; // 非選択状態のアイコン/テキスト（スレートグレー）
 
 // ============================================================
-// SVGアイコン（細線ストロークタイプ）
+// SVG アイコンコンポーネント（Lucide React 使用）
+// strokeWidth={1.25} で細線の上品なスタイルにしています
 // ============================================================
-
-// ギャラリー：4マスのグリッド
-const IconGallery = ({ active }: { active: boolean }) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke={active ? ACCENT : INACTIVE} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7.5" height="7.5" rx="1.5" />
-    <rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5" />
-    <rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5" />
-    <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5" />
-  </svg>
+const IconGallery  = ({ active }: { active: boolean }) => (
+  <LayoutGrid  size={22} strokeWidth={1.25} color={active ? ACCENT : INACTIVE} />
 );
-
-// トレーニング：稲妻
 const IconTraining = ({ active }: { active: boolean }) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke={active ? ACCENT : INACTIVE} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M13 2L4.5 13.5H12L11 22L19.5 10.5H12L13 2Z" />
-  </svg>
+  <Zap         size={22} strokeWidth={1.25} color={active ? ACCENT : INACTIVE} />
 );
-
-// スキャン：カメラ（常に白、背景色が濃いため）
-const IconScan = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke="#ffffff" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5l2-3h7l2 3H21a2 2 0 0 1 2 2z" />
-    <circle cx="12" cy="13" r="3.5" />
-  </svg>
+const IconScan     = () => (
+  <Camera      size={22} strokeWidth={1.25} color="#ffffff" />
 );
-
-// ヘルプカード：IDカード
-const IconHelp = ({ active }: { active: boolean }) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-    stroke={active ? ACCENT : INACTIVE} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="5" width="20" height="14" rx="2.5" />
-    <circle cx="8.5" cy="12" r="2.5" />
-    <path d="M14 10h5" />
-    <path d="M14 14h3.5" />
-  </svg>
+const IconHelp     = ({ active }: { active: boolean }) => (
+  <User        size={22} strokeWidth={1.25} color={active ? ACCENT : INACTIVE} />
 );
 
 // ============================================================
-// ナビゲーションの項目リスト
+// ナビゲーション項目の定義
+// ここを変えるとメニューの内容が変わります
 // ============================================================
 const NAV_ITEMS = [
   { href: "/gallery",  label: NAV.gallery,  screen: "gallery",  Icon: IconGallery,  isMain: false },
@@ -84,11 +60,11 @@ export default function Navigation() {
 
   return (
     <>
-      {/* =====================================================
-          スマホ用：画面下部タブバー（768px未満で表示）
-          ===================================================== */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-100/80 md:hidden">
-        <div className="flex items-center justify-around h-16 px-1 pb-safe">
+      {/* ===================================================
+          スマホ用タブバー（768px 未満で表示）
+          =================================================== */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-t border-[#E2E8F0] md:hidden">
+        <div className="flex items-center justify-around h-16 px-2 pb-safe">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -98,38 +74,39 @@ export default function Navigation() {
                 onClick={() => handleNavClick(item.screen, item.label)}
                 className={`
                   relative flex flex-col items-center justify-center
-                  min-w-[48px] min-h-[48px] px-3
+                  min-w-[56px] min-h-[56px] px-3
                   transition-all duration-200
-                  ${item.isMain ? "-mt-5" : ""}
+                  ${item.isMain ? "-mt-6" : ""}
                 `}
               >
                 {item.isMain ? (
-                  /* スキャンボタン：セージグリーンの丸ボタン */
+                  /* スキャンボタン：エメラルドの丸ボタン */
                   <div className={`
-                    w-14 h-14 rounded-full
+                    w-14 h-14 rounded-2xl
                     flex flex-col items-center justify-center gap-0.5
-                    bg-[#8EC4B8] sage-shadow
+                    bg-[#064E3B] emerald-shadow
                     transition-transform duration-200
                     ${isActive ? "scale-95" : "active:scale-95"}
                   `}>
                     <IconScan />
-                    <span className="text-[9px] text-white font-medium leading-none tracking-wide">
+                    <span className="text-[9px] text-white font-medium leading-none tracking-wider">
                       {item.label}
                     </span>
                   </div>
                 ) : (
-                  /* 通常タブボタン */
+                  /* 通常タブ */
                   <>
                     <item.Icon active={isActive} />
                     <span className={`
-                      text-[10px] mt-0.5 font-medium tracking-wide
-                      ${isActive ? "text-[#8EC4B8]" : "text-[#B0B8C1]"}
+                      text-[10px] mt-1 font-medium tracking-wider
+                      ${isActive ? "text-[#064E3B]" : "text-[#94A3B8]"}
+                      transition-colors duration-200
                     `}>
                       {item.label}
                     </span>
                     {/* アクティブインジケーター（上部の細い線） */}
                     {isActive && (
-                      <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] rounded-full bg-[#8EC4B8]" />
+                      <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-[#064E3B]" />
                     )}
                   </>
                 )}
@@ -139,23 +116,24 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* =====================================================
-          iPad・PC用：左サイドバー（768px以上で表示）
-          ===================================================== */}
+      {/* ===================================================
+          iPad/PC 用サイドバー（768px 以上で表示）
+          =================================================== */}
       <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-60 bg-white flex-col z-50"
-        style={{ boxShadow: "2px 0 20px rgba(0,0,0,0.04)" }}>
+        style={{ boxShadow: "1px 0 0 #E2E8F0" }}>
+
         {/* アプリロゴ */}
-        <div className="px-6 pt-8 pb-6">
-          <h1 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
+        <div className="px-7 pt-10 pb-8">
+          <h1 className="text-xl font-bold text-[#0F172A] tracking-tight">
             {APP.name}
           </h1>
-          <p className="text-xs text-[#B0B8C1] mt-0.5 tracking-widest font-medium">
+          <p className="text-[11px] text-[#94A3B8] mt-1 tracking-[0.15em] font-medium">
             {APP.tagline}
           </p>
         </div>
 
         {/* メニュー項目 */}
-        <div className="flex-1 px-3 space-y-1">
+        <div className="flex-1 px-4 space-y-1">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -164,14 +142,14 @@ export default function Navigation() {
                 href={item.href}
                 onClick={() => handleNavClick(item.screen, item.label)}
                 className={`
-                  flex items-center gap-3
-                  min-h-[48px] px-3 py-2.5
+                  flex items-center gap-3.5
+                  min-h-[52px] px-4 py-3
                   rounded-2xl transition-all duration-200
                   ${item.isMain
-                    ? `bg-[#8EC4B8] text-white sage-shadow ${isActive ? "opacity-90" : "hover:opacity-90"}`
+                    ? `bg-[#064E3B] text-white emerald-shadow ${isActive ? "opacity-90" : "hover:opacity-90"}`
                     : isActive
-                      ? "bg-[#8EC4B8]/10 text-[#8EC4B8]"
-                      : "text-[#737373] hover:bg-gray-50/80 hover:text-[#1A1A1A]"
+                      ? "bg-[#064E3B]/8 text-[#064E3B]"
+                      : "text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#0F172A]"
                   }
                 `}
               >
@@ -186,9 +164,9 @@ export default function Navigation() {
           })}
         </div>
 
-        {/* バージョン情報 */}
-        <div className="px-6 py-5">
-          <p className="text-xs text-[#B0B8C1] tracking-widest">{APP.version}</p>
+        {/* バージョン */}
+        <div className="px-7 py-6">
+          <p className="text-[11px] text-[#CBD5E1] tracking-widest">{APP.version}</p>
         </div>
       </nav>
     </>

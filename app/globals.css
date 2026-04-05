@@ -1,7 +1,7 @@
 /* ============================================================
    グローバルCSS
-   アプリ全体に適用されるスタイルです。
-   Tailwind CSSの基本設定を読み込んでいます。
+   アプリ全体に適用されるスタイル定義です。
+   Tailwind CSSの設定と、カスタムスタイルを管理しています。
    ============================================================ */
 
 @tailwind base;
@@ -11,13 +11,15 @@
 /* ベーススタイル */
 @layer base {
   body {
-    /* 文字をくっきり表示させる設定 */
+    /* フォントの描画をくっきりさせる設定 */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* 文字間隔をわずかに広げて高級感を出す */
-    letter-spacing: 0.025em;
-    /* フォントウェイトを細めに（Noto Sans JP Light） */
+    /* 文字間隔（日本語のゆったりとした読みやすさのため） */
+    letter-spacing: 0.02em;
+    /* フォントの細さ（Light：上品で洗練された印象） */
     font-weight: 300;
+    /* ベーステキストカラー */
+    color: #0F172A;
   }
 
   /* スムーズスクロール */
@@ -26,38 +28,47 @@
   }
 }
 
-/* カスタムユーティリティ */
+/* カスタムユーティリティクラス */
 @layer utilities {
-  /* タッチターゲットのサイズを48px以上に保つ */
+  /* タッチターゲットのサイズを最低56pxに確保（押しやすさのため） */
   .touch-target {
-    @apply min-h-[48px] min-w-[48px];
+    @apply min-h-[56px] min-w-[56px];
   }
 
-  /* カード用の柔らかい影（枠線の代わりに使います） */
+  /* カード用の繊細な影（枠線の代わりに使います）*/
   .card-shadow {
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
   }
 
-  /* ホバー時の影（少し強く） */
-  .card-shadow-hover {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  /* ホバー時の影（少し浮き上がる感じ） */
+  .card-shadow-lg {
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
   }
 
-  /* セージグリーンのボタン影 */
-  .sage-shadow {
-    box-shadow: 0 4px 20px rgba(142, 196, 184, 0.45);
+  /* エメラルドボタンの影（#064E3Bに合わせた色付き影） */
+  .emerald-shadow {
+    box-shadow: 0 4px 16px rgba(6, 78, 59, 0.28);
+  }
+
+  /* ヘッダーの繊細なボーダーライン */
+  .header-border {
+    box-shadow: 0 1px 0 #E2E8F0;
   }
 }
 
 /* スキャン画面のスキャンラインアニメーション */
 @keyframes scanline {
-  0%   { transform: translateY(0); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
+  0%   { transform: translateY(0);    opacity: 0; }
+  10%  {                               opacity: 1; }
+  90%  {                               opacity: 1; }
   100% { transform: translateY(280px); opacity: 0; }
 }
 
-/* iPhoneのホームバー対応（セーフエリア） */
+/* iPhoneのホームバー対応（セーフエリア下部余白） */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
