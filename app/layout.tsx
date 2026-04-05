@@ -1,5 +1,5 @@
 // ============================================================
-// ルートレイアウト（Root Layout）
+// layout.tsx — ルートレイアウト
 // アプリ全体の「外枠」です。
 // ここに書いた内容はすべてのページに共通で適用されます。
 // ============================================================
@@ -9,36 +9,36 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 
-// ============================================================
-// フォント設定
-// Inter：欧文（アルファベット・数字）に使用
-// Noto Sans JP：日本語に使用
-// ============================================================
+// ── フォント設定 ───────────────────────────────────────────
+// Inter     : アルファベット・数字（欧文）用
+// Noto Sans JP : 日本語用（Light 300 〜 Bold 700）
+// ──────────────────────────────────────────────────────────
 
-// Inter — モダンで可読性の高い欧文フォント
+// 欧文フォント（Inter） — モダンで可読性が高い
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
+  variable: "--font-inter", // CSS変数名（tailwind.config.ts で参照）
+  display: "swap",           // フォント読み込み中も文字を表示する設定
 });
 
-// Noto Sans JP — 日本語に最適化されたGoogleフォント
+// 日本語フォント（Noto Sans JP）
 const noto = Noto_Sans_JP({
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500", "700"], // 細い〜太いの4段階を読み込む
   subsets: ["latin"],
   variable: "--font-noto",
   display: "swap",
 });
 
-// ============================================================
-// メタデータ（ブラウザのタブやSNSシェア時に表示される情報）
-// ここを書き換えるとタブの文字やシェア時の説明が変わります
-// ============================================================
+// ── メタデータ ─────────────────────────────────────────────
+// ブラウザのタブや SNS シェア時に表示される情報です。
+// ここを変えるとタブのタイトル・説明文が変わります。
+// ──────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   title: "コトナビ | KOTONAVI",
   description: "ことばのナビゲーター - あなたのコミュニケーションをサポートします",
 };
 
+// ── レイアウト本体 ─────────────────────────────────────────
 export default function RootLayout({
   children,
 }: {
@@ -46,16 +46,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      {/*
-        フォントを body に適用します。
-        Inter（欧文）→ Noto Sans JP（日本語）の順で読み込まれます。
-      */}
-      <body className={`${inter.variable} ${noto.variable} bg-white`}
-        style={{ fontFamily: "var(--font-inter), var(--font-noto), sans-serif" }}>
-        {/* ナビゲーションバー（スマホ：下部タブ、PC：左サイドバー） */}
+      <body
+        // フォント変数を body に適用します
+        className={`${inter.variable} ${noto.variable} bg-white font-sans`}
+      >
+        {/* ナビゲーションバー（スマホ：下部 / PC：左サイドバー） */}
         <Navigation />
 
-        {/* メインコンテンツ */}
+        {/* メインコンテンツエリア */}
         {/* スマホ：タブバー分の下余白 / PC：サイドバー分の左余白 */}
         <main className="min-h-screen pb-24 md:pb-0 md:pl-60">
           {children}
